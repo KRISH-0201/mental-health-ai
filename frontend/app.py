@@ -586,12 +586,21 @@ if not st.session_state.token:
                 )
                 if res.status_code == 200:
                     data = res.json()
-                    st.session_state.token    = data["access_token"]
-                    st.session_state.username = username
-                    st.success("Welcome ♡")
-                    st.rerun()
+                    if mode == "Login":
+                        # Login response contains access_token
+                        st.session_state.token    = data["access_token"]
+                        st.session_state.username = username
+                        st.success("Welcome ♡")
+                        st.rerun()
+                    else:
+                        # Signup response is {"message": "User registered successfully"}
+                        # — there is NO access_token, redirect user to login
+                        st.success("Account created! Please log in. ♡")
+                        st.session_state["auth_mode"] = "Login"
+                        st.rerun()
                 else:
-                    st.error("Authentication failed — please check your credentials.")
+                    detail = res.json().get("detail", "Authentication failed — please check your credentials.")
+                    st.error(detail)
             except Exception:
                 st.error("Cannot connect to server. Make sure the backend is running.")
 

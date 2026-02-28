@@ -1,80 +1,81 @@
+from collections import Counter, defaultdict
+from datetime import datetime
 from sqlalchemy.orm import Session
 from database.db import SessionLocal
-from database.models import ChatHistory
-from collections import Counter
+from database.models import EmotionLog
 
 
 def get_mood_summary(user_id: str):
 
     db: Session = SessionLocal()
 
-    chats = db.query(ChatHistory).filter(
-        ChatHistory.user_id == user_id
-    ).all()
+    try:
+        logs = db.query(EmotionLog).filter(
+            EmotionLog.emotion.isnot(None),
+            EmotionLog.user_id == user_id
+        ).all()
 
-    db.close()
+        if not logs:
+            return {"message": "No data available for this user."}
 
-    if not chats:
-        return {"message": "No data available for this user."}
+        total = len(logs)
+        # Extract values while session is still open (avoids DetachedInstanceError)
+        emotions = [log.emotion for log in logs]
+        intensities = [log.intensity for log in logs]
+    finally:
+        db.close()
 
-    total_messages = len(chats)
-
-    sentiments = [chat.sentiment for chat in chats]
-    emotions = [chat.dominant_emotion for chat in chats]
-    support_levels = [chat.support_level for chat in chats]
-
-    sentiment_counts = Counter(sentiments)
     emotion_counts = Counter(emotions)
-    support_counts = Counter(support_levels)
 
     summary = {
-        "total_messages": total_messages,
-        "sentiment_distribution": dict(sentiment_counts),
-        "dominant_emotion_distribution": dict(emotion_counts),
-        "support_level_distribution": dict(support_counts),
-        "most_common_emotion": emotion_counts.most_common(1)[0][0]
+        "total_logs": total,
+        "emotion_distribution": dict(emotion_counts),
+        "most_common_emotion": emotion_counts.most_common(1)[0][0],
+        "average_intensity": round(sum(intensities) / total, 2),
     }
 
     return summary
-from collections import defaultdict
-from datetime import datetime
+
 
 def weekly_trend(user_id: str):
 
     db = SessionLocal()
 
-    chats = db.query(ChatHistory).filter(
-        ChatHistory.user_id == user_id
-    ).all()
-
-    db.close()
+    try:
+        logs = db.query(EmotionLog).filter(
+            EmotionLog.user_id == user_id
+        ).all()
+    finally:
+        db.close()
 
     trend = defaultdict(int)
 
-    for chat in chats:
-        week = chat.timestamp.strftime("%Y-%U")  # Year-Week
+    for log in logs:
+        week = log.timestamp.strftime("%Y-%U")  # Year-Week
         trend[week] += 1
 
     return dict(trend)
+
+
 def emotion_percentage(user_id: str):
 
     db = SessionLocal()
 
-    chats = db.query(ChatHistory).filter(
-        ChatHistory.user_id == user_id
-    ).all()
+    try:
+        logs = db.query(EmotionLog).filter(
+            EmotionLog.user_id == user_id
+        ).all()
+    finally:
+        db.close()
 
-    db.close()
-
-    if not chats:
+    if not logs:
         return {}
 
-    total = len(chats)
+    total = len(logs)
+    counts: dict = {}
 
-    counts = {}
-
-    for chat in chats:
-        emotion = chat.dominant_emotion
+    for log in logs:
+        emotion = log.emotion
         counts[emotion] = counts.get(emotion, 0) + 1
 
     percentages = {

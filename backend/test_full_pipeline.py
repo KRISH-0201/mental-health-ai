@@ -8,4 +8,4 @@ print("\n--- ANALYSIS ---")
 print(result["analysis"])
 
 print("\n--- RESPONSE ---")
-print(result["response"]["message"])
+print(result["response"])  # response is a string, not a dict

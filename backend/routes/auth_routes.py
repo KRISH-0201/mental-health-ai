@@ -38,22 +38,24 @@ def signup(user: UserRegister):
 
     db = SessionLocal()
 
-    existing_user = db.query(User).filter(User.username == user.username).first()
-    if existing_user:
-        raise HTTPException(status_code=400, detail="User already exists")
+    try:
+        existing_user = db.query(User).filter(User.username == user.username).first()
+        if existing_user:
+            raise HTTPException(status_code=400, detail="User already exists")
 
-    validate_password(user.password)
+        validate_password(user.password)
 
-    hashed_password = bcrypt.hash(user.password)
+        hashed_password = bcrypt.hash(user.password)
 
-    new_user = User(
-        username=user.username,
-        password=hashed_password
-    )
+        new_user = User(
+            username=user.username,
+            password=hashed_password
+        )
 
-    db.add(new_user)
-    db.commit()
-    db.close()
+        db.add(new_user)
+        db.commit()
+    finally:
+        db.close()
 
     return {"message": "User registered successfully"}
 
@@ -65,21 +67,23 @@ def signup(user: UserRegister):
 def login(user: UserLogin):
 
     db = SessionLocal()
-    db_user = db.query(User).filter(User.username == user.username).first()
 
-    if not db_user or not bcrypt.verify(user.password, db_user.password):
-        raise HTTPException(status_code=401, detail="Invalid credentials")
+    try:
+        db_user = db.query(User).filter(User.username == user.username).first()
 
-    access_token = create_access_token({"sub": db_user.username})
-    refresh_token = create_refresh_token({"sub": db_user.username})
+        if not db_user or not bcrypt.verify(user.password, db_user.password):
+            raise HTTPException(status_code=401, detail="Invalid credentials")
 
-    db.close()
+        access_token = create_access_token({"sub": db_user.username})
+        refresh_token = create_refresh_token({"sub": db_user.username})
 
-    return {
-        "access_token": access_token,
-        "refresh_token": refresh_token,
-        "token_type": "bearer"
-    }
+        return {
+            "access_token": access_token,
+            "refresh_token": refresh_token,
+            "token_type": "bearer"
+        }
+    finally:
+        db.close()
 
 
 # ===============================

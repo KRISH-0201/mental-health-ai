@@ -61,8 +61,10 @@ def emotion_pct(user=Depends(verify_token)):
 
 
 @router.get("/daily-emotions/{user_id}")
-def get_daily_emotions(user_id: str):
-    """Legacy endpoint — grouped emotion counts per day."""
+def get_daily_emotions(user_id: str, user=Depends(verify_token)):
+    """Returns grouped emotion counts per day for the authenticated user."""
+    # Ignore path param — always use the token's identity to prevent data leakage
+    actual_user_id = user.username
     db = SessionLocal()
     try:
         results = (
@@ -71,7 +73,7 @@ def get_daily_emotions(user_id: str):
                 EmotionLog.emotion,
                 func.count()
             )
-            .filter(EmotionLog.user_id == user_id)
+            .filter(EmotionLog.user_id == actual_user_id)
             .group_by(func.date(EmotionLog.timestamp), EmotionLog.emotion)
             .all()
         )
