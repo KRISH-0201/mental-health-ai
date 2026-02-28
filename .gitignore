@@ -1,0 +1,55 @@
+# ── Python ──────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# ── Virtual environments ─────────────────────────
+venv/
+.venv/
+env/
+.env/
+
+# ── Secrets / Config ─────────────────────────────
+.env
+*.env
+.env.*
+!.env.example
+
+# ── Database (SQLite) ─────────────────────────────
+*.db
+*.sqlite
+*.sqlite3
+
+# ── ML Models (too large for Git — store on HF Hub or use Git LFS) ──
+ml_models/
+*.bin
+*.safetensors
+*.pt
+*.pth
+
+# ── Streamlit cache ───────────────────────────────
+.streamlit/secrets.toml
+
+# ── OS / Editor ──────────────────────────────────
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ── Logs ─────────────────────────────────────────
+*.log
+logs/
+
+# ── Test cache ────────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
