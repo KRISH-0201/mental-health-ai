@@ -596,12 +596,10 @@ if not st.session_state.token:
                         # Signup response is {"message": "User registered successfully"}
                         # — there is NO access_token, redirect user to login
                         st.success("Account created! Please log in. ♡")
-                        st.session_state["auth_mode"] = "Login"
-                        st.rerun()
                 else:
                     detail = res.json().get("detail", "Authentication failed — please check your credentials.")
                     st.error(detail)
-            except Exception:
+            except requests.RequestException:
                 st.error("Cannot connect to server. Make sure the backend is running.")
 
 
