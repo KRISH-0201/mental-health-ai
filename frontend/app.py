@@ -3,7 +3,7 @@ import requests
 import plotly.graph_objects as go
 import os
 
-BACKEND_URL = os.getenv("BACKEND_URL", "http://127.0.0.1:8000")
+BACKEND_URL = os.getenv("BACKEND_URL", "https://mental-health-ai-production-e9e7.up.railway.app")
 
 st.set_page_config(
     page_title="Mental Health AI Chatbot",
