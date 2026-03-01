@@ -834,4 +834,4 @@ else:
                         "role": "assistant",
                         "content": "Backend unreachable. Make sure the server is running on port 8000."
                     })
-            st.rerun()
+            st.rerun()# Trigger rebuild for Streamlit URL
