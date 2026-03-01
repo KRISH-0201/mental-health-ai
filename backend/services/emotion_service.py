@@ -3,12 +3,10 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 import os
 
-CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_ROOT = os.path.abspath(os.path.join(CURRENT_DIR, "..", ".."))
+# Download and load the custom emotion model from the public Hugging Face repository instead of the local hard drive
+MODEL_PATH = "Krish0201/mental-health-emotion-model"
 
-MODEL_PATH = os.path.join(PROJECT_ROOT, "ml_models", "emotion_model")
-
-# Load once at startup (IMPORTANT)
+# Load once at startup (HuggingFace will automatically download and cache it locally)
 tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH)
 model = AutoModelForSequenceClassification.from_pretrained(MODEL_PATH)
 
