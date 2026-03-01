@@ -6,6 +6,13 @@
 [![Streamlit](https://img.shields.io/badge/Frontend-Streamlit-FF4B4B?style=flat-square&logo=streamlit)](https://streamlit.io/)
 [![PyTorch](https://img.shields.io/badge/ML-PyTorch-EE4C2C?style=flat-square&logo=pytorch)](https://pytorch.org/)
 [![Groq](https://img.shields.io/badge/LLM-Groq-F55036?style=flat-square)](https://groq.com/)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Streamlit-FF4B4B?style=for-the-badge&logo=streamlit)](https://mental-health-ai-4rimde2wkfixlwvj8zjapf.streamlit.app/)
+
+---
+
+## 🚀 Live Demo
+
+> **[▶ Try the app live here →](https://mental-health-ai-4rimde2wkfixlwvj8zjapf.streamlit.app/)**
 
 ---
 
