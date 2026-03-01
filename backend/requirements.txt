@@ -8,6 +8,7 @@ python-dotenv==1.0.1
 # ── Auth & Security ───────────────────────────────
 python-jose==3.3.0
 passlib[bcrypt]==1.7.4
+bcrypt==3.2.0
 slowapi==0.1.9
 
 # ── Database ──────────────────────────────────────
